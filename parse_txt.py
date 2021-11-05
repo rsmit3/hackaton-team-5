@@ -21,7 +21,7 @@ def parse(path):
 
         frame.append(line_dict)
 
-    json_out = []
+    json_out = {}
     for i in range(len(S_index) - 1):
         rotation = frame[S_index[i]:S_index[i + 1]]
         json_out[i] = rotation
@@ -30,7 +30,7 @@ def parse(path):
 
 
 if __name__ == '__main__':
-    data = parse('data/LidarData.txt')
+    data = parse('data/LidarData2.txt')
 
     with open('data/LidarData.json', 'w') as f:
         f.write(json.dumps(data, indent=2))
