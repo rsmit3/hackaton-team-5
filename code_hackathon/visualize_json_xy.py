@@ -19,8 +19,10 @@ def visualize(angles,distances,b):
     x=np.sin(angles) * distances
 
     plt.scatter(x,y)
-    plt.xlim(-5000,5000)
-    plt.ylim(-5000,5000)
+    limit_min=-800
+    limit_max=800
+    plt.xlim(limit_min,limit_max)
+    plt.ylim(limit_min,limit_max)
     #offsets = np.array((angles, distances)).transpose()
     #line.set_offsets(offsets)
     pathlib.Path(outputDirectory).mkdir(parents=True, exist_ok=True)
