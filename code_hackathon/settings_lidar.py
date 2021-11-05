@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     use_default = False
     lidar_settings = {}
 
-    ADJUSTMENT_DEGREES = 90
+    ADJUSTMENT_DEGREES = -5
     DISTANCE_CAR_HAS_TO_COME_CLOSER = 0
     ITERATIONS_CAR_HAS_TO_COME_CLOSER = 0
     START_RANGE_ANGLE_LOW = 0
