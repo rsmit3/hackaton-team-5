@@ -9,7 +9,7 @@ def parse(path):
     frame = []
     S_index = []
     for line_index, line in enumerate(lines):
-        line_dict = {}
+        line_array = []
         for i in range(0, len(line), 2):
             k, v = line[i].strip(':'), line[i+1]
 
@@ -17,9 +17,9 @@ def parse(path):
                 S_index.append(line_index)
                 continue
 
-            line_dict[k] = float(v)
+            line_array.append(float(v))
 
-        frame.append(line_dict)
+        frame.append(line_array)
 
     json_out = {}
     for i in range(len(S_index) - 1):
