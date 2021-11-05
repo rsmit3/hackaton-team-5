@@ -5,6 +5,7 @@ import os
 import pathlib
 from settings_lidar import retrieve_settings
 import shutil
+from get_data import get_data
 
 settings = retrieve_settings()
 file_to_read = settings.file_to_visualize
@@ -17,19 +18,8 @@ def visualize(angles,distances,line,b):
     pathlib.Path(outputDirectory).mkdir(parents=True, exist_ok=True)
     plt.savefig(outputDirectory + file_name_to_save + '-' + str(b)+'.png')
 
-def get_data():
-    with open(file_to_read) as json_file:
-        data = json.load(json_file)
-        keysToDelete=[]
-    for key,value in data.items():
-        if int(key) < int(0.0*len(data)) or int(key) > int(1*len(data)):
-            keysToDelete.append(str(key))
-    for key in keysToDelete:
-        del data[key]
-    return data
-
 def init():
-    data= get_data()
+    data= get_data(file_to_read)
     beta = np.linspace(int(list(data.keys())[0]),int(list(data.keys())[len(data)-1]),len(data))
     fig = plt.figure()
     ax = plt.subplot(111, projection='polar')

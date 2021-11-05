@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 from settings_lidar import retrieve_settings
+from get_data import get_data
 import pathlib
 
 settings = retrieve_settings()
@@ -26,19 +27,8 @@ def visualize(angles,distances,b):
     plt.savefig(outputDirectory + file_name_to_save + '-' + str(b)+'.png')
     plt.clf()
 
-def get_data():
-    with open(file_to_read) as json_file:
-        data = json.load(json_file)
-        keysToDelete=[]
-    for key,value in data.items():
-        if int(key) < int(0.0*len(data)) or int(key) > int(1*len(data)):
-            keysToDelete.append(str(key))
-    for key in keysToDelete:
-        del data[key]
-    return data
-
 def init():
-    data= get_data()
+    data= get_data(file_to_read)
     beta = np.linspace(int(list(data.keys())[0]),int(list(data.keys())[len(data)-1]),len(data))
     beta=list(beta)
     range_list_info=[]
