@@ -21,9 +21,17 @@ def visualize(angles,distances,b):
 
     limit_max=800
     limit_min=-limit_max
-
-    if calculations.has_warning(x, y, limit_min, limit_max):
+    threshold = 25
+    
+    coordinates=list(zip(x,y))
+    x=[x for x,y in coordinates if (x>1 or x<-1)]
+    y=[y for x,y in coordinates if (x>1 or x<-1)]
+    
+    if calculations.has_warning(x, y, limit_min, limit_max, threshold):
         plt.text(600, 600, "Warning!")
+
+    coordinates=list(zip(x,y))
+    y=[y + threshold if x < 0 and y > 0 else y for x,y in coordinates ]
 
     plt.scatter(x,y)
     plt.xlim(limit_min,limit_max)
