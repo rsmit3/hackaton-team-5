@@ -4,6 +4,7 @@ import numpy as np
 import os
 from settings_lidar import retrieve_settings
 from get_data import get_data
+import calculations
 import pathlib
 
 settings = retrieve_settings()
@@ -16,11 +17,15 @@ def visualize(angles,distances,b):
 
     angles=np.radians([d+adjustment if d <=360-adjustment else d-(360-adjustment) for d in angles])
     y=np.cos(angles) * distances
-    x=np.sin(angles) * distances
+    x=-np.sin(angles) * distances
+
+    limit_max=800
+    limit_min=-limit_max
+
+    if calculations.has_warning(x, y, limit_min, limit_max):
+        plt.text(600, 600, "Warning!")
 
     plt.scatter(x,y)
-    limit_min=-800
-    limit_max=800
     plt.xlim(limit_min,limit_max)
     plt.ylim(limit_min,limit_max)
     #offsets = np.array((angles, distances)).transpose()
