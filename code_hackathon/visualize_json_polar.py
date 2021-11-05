@@ -9,10 +9,18 @@ settings = retrieve_settings()
 file_to_read = settings.file_to_visualize
 file_name_to_save=file_to_read.split('/')[-1].split('.')[0]
 
-def visualize(angles,distances,line,b):
-    offsets = np.array((angles, distances)).transpose()
-    line.set_offsets(offsets)
-    plt.savefig(settings.folder_to_save_plots + '/' + file_name_to_save + '-' + str(b)+'.png')
+def visualize(angles,distances,timestamps,b):
+    angles, distances = zip(*[(a,d) for a, d in zip(angles, distances) if d < settings.dmax])
+
+    fig = plt.figure()
+    ax = plt.subplot(111, projection='polar')
+    ax.scatter(angles, distances, c=distances, s=10,
+                               cmap='summer_r', lw=0)
+    ax.set_rmax(settings.dmax)
+    plt.grid(False)
+    plt.axis('off')
+    plt.savefig(settings.folder_to_save_plots + '/' + file_name_to_save + '-' + str(b)+'.png', transparent=True, dpi=300)
+    plt.close()
 
 def get_data():
     with open(file_to_read) as json_file:
@@ -28,32 +36,28 @@ def get_data():
 def init():
     data= get_data()
     beta = np.linspace(int(list(data.keys())[0]),int(list(data.keys())[len(data)-1]),len(data))
-    fig = plt.figure()
-    ax = plt.subplot(111, projection='polar')
-    line = ax.scatter([0, 0], [0, 0], s=10, c=[settings.imin, settings.imax],
-                               cmap=plt.cm.Blues_r, lw=0)
-    ax.set_rmax(settings.dmax)
-    ax.grid(True)
     beta=list(beta)
     range_list_info=[]
-    return data,beta,range_list_info,line,fig
+    return data,beta,range_list_info
 
 def run(adjustment):
-    data,beta, range_list_info, line, fig = init()
+    data,beta, range_list_info= init()
     #os.mkdir(settings.folder_to_save_plots + '/' + file_name_to_save)
     for b in beta:
         scan = data[str(b).split('.')[0]]
         distances = []
         angles = []
+        timestamps = []
         for angle, distance, quality, timestamp in scan:
             angles.append(np.round(float(angle),2))
             distances.append(float(distance))
+            timestamps.append(timestamp)
 
         angles=np.radians([d+adjustment if d <=360-adjustment else d-(360-adjustment) for d in angles])
-        visualize(angles,distances,line,b)
+        visualize(angles,distances,timestamps,b)
 
 def adjust_json():
-    data, beta, range_list_info, line, fig = init()
+    data, beta, range_list_info, fig, ax = init()
     new_data={}
     os.mkdir(settings.folder_to_save_plots + file_name_to_save)
     for b in beta:
