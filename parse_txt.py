@@ -24,7 +24,7 @@ def parse(path):
     json_out = []
     for i in range(len(S_index) - 1):
         rotation = frame[S_index[i]:S_index[i + 1]]
-        json_out.append(rotation)
+        json_out[i] = rotation
 
     return json_out
 

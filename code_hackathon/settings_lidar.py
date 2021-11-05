@@ -1,5 +1,4 @@
 import os
-from .aws.dynamo_db.dynamo_db import DamageDetectionGates, MapAttributeEncoder
 from functools import lru_cache
 from pydantic import BaseSettings
 from loguru import logger
