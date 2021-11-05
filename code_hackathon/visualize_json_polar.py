@@ -2,16 +2,19 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import pathlib
 from settings_lidar import retrieve_settings
 
 settings = retrieve_settings()
 file_to_read = settings.file_to_visualize
 file_name_to_save=file_to_read.split('/')[-1].split('.')[0]
+outputDirectory = settings.folder_to_save_plots + '/polar/'
 
 def visualize(angles,distances,line,b):
     offsets = np.array((angles, distances)).transpose()
     line.set_offsets(offsets)
-    plt.savefig(settings.folder_to_save_plots + '/' + file_name_to_save + '-' + str(b)+'.png')
+    pathlib.Path(outputDirectory).mkdir(parents=True, exist_ok=True)
+    plt.savefig(outputDirectory + file_name_to_save + '-' + str(b)+'.png')
 
 def get_data():
     with open(file_to_read) as json_file:
@@ -68,16 +71,17 @@ def adjust_json():
 
 def clean_directory(directoryName):
     folder = directoryName
-    for filename in os.listdir(folder):
-        file_path = os.path.join(folder, filename)
-        try:
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
-        except Exception as e:
-            print('Failed to delete %s. Reason: %s' % (file_path, e))
+    if os.path.isdir(directoryName):
+        for filename in os.listdir(folder):
+            file_path = os.path.join(folder, filename)
+            try:
+                if os.path.isfile(file_path) or os.path.islink(file_path):
+                    os.unlink(file_path)
+                elif os.path.isdir(file_path):
+                    shutil.rmtree(file_path)
+            except Exception as e:
+                print('Failed to delete %s. Reason: %s' % (file_path, e))
 
 if __name__ == "__main__":
-    clean_directory(settings.folder_to_save_plots)
+    clean_directory(outputDirectory)
     run()
