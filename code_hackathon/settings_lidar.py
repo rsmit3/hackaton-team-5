@@ -1,7 +1,6 @@
 import os
 from functools import lru_cache
 from pydantic import BaseSettings
-from loguru import logger
 
 class Settings(BaseSettings):
     lidar_settings_key = 'lidar_settings'
@@ -9,7 +8,7 @@ class Settings(BaseSettings):
     use_default = False
     lidar_settings = {}
 
-    ADJUSTMENT_DEGREES = 0
+    ADJUSTMENT_DEGREES = 90
     DISTANCE_CAR_HAS_TO_COME_CLOSER = 0
     ITERATIONS_CAR_HAS_TO_COME_CLOSER = 0
     START_RANGE_ANGLE_LOW = 0
@@ -43,12 +42,12 @@ class Settings(BaseSettings):
     imax: int = 50  # to make the plot
 
     postfix_mac = '.json'
-    file_to_read = '../data/high_lidar_forwards_sample1_scanmode_2.json'  # if platform is mac fill this in
+    file_to_read = 'data/LidarData.json'  # if platform is mac fill this in
     percentage_cut_off_json_front = 0
     percentage_cut_off_json_end = 0
 
-    file_to_visualize = '../data/LidarData.json'
-    folder_to_save_plots = '../data/plots/'
+    file_to_visualize = 'data/LidarData.json'
+    folder_to_save_plots = 'data/plots/'
 
     continue_lidar = False
     start_lidar = False

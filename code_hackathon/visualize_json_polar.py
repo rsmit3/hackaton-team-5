@@ -4,6 +4,7 @@ import numpy as np
 import os
 import pathlib
 from settings_lidar import retrieve_settings
+import shutil
 
 settings = retrieve_settings()
 file_to_read = settings.file_to_visualize
@@ -40,7 +41,7 @@ def init():
     range_list_info=[]
     return data,beta,range_list_info,line,fig
 
-def run():
+def run(adjustment):
     data,beta, range_list_info, line, fig = init()
     #os.mkdir(settings.folder_to_save_plots + '/' + file_name_to_save)
     for b in beta:
@@ -48,8 +49,10 @@ def run():
         distances = []
         angles = []
         for angle, distance, quality, timestamp in scan:
-            angles.append(np.round(np.radians(float(angle)),2))
+            angles.append(np.round(float(angle),2))
             distances.append(float(distance))
+
+        angles=np.radians([d+adjustment if d <=360-adjustment else d-(360-adjustment) for d in angles])
         visualize(angles,distances,line,b)
 
 def adjust_json():
@@ -84,4 +87,4 @@ def clean_directory(directoryName):
 
 if __name__ == "__main__":
     clean_directory(outputDirectory)
-    run()
+    run(85)
