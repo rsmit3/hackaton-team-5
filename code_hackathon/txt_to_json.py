@@ -2,7 +2,9 @@ import json
 
 # Using readlines()
 def run():
-    file1 = open('/Users/tom.klaver/Downloads/rplidar_sdk-master/sdk/ah3.txt', 'r')
+    inputFile = '../data/LidarData.txt'
+    outputFile = '../data/LidarData.json'
+    file1 = open(inputFile, 'r')
     Lines = file1.readlines()
     # Strips the newline character
     nr=0
@@ -24,5 +26,8 @@ def run():
             distance = float(splitted[2].split(' ')[1])
             listje.append([angle,distance,0])
 
-    with open('/Users/tom.klaver/Downloads/testplots/ah3.json', 'w') as outfile:
+    with open(outputFile, 'w') as outfile:
         json.dump(dct, outfile)
+
+if __name__ ==  "__main__":
+    run()

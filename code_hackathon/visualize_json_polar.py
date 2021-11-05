@@ -2,17 +2,16 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 import os
-from .settings_lidar import retrieve_settings
+from settings_lidar import retrieve_settings
 
 settings = retrieve_settings()
-
 file_to_read = settings.file_to_visualize
 file_name_to_save=file_to_read.split('/')[-1].split('.')[0]
 
 def visualize(angles,distances,line,b):
     offsets = np.array((angles, distances)).transpose()
     line.set_offsets(offsets)
-    plt.savefig(settings.folder_to_save_plots+file_name_to_save+'/'+str(b)+'.png')
+    plt.savefig(settings.folder_to_save_plots + '/' + file_name_to_save + '-' + str(b)+'.png')
 
 def get_data():
     with open(file_to_read) as json_file:
@@ -45,7 +44,7 @@ def run():
         scan = data[str(b).split('.')[0]]
         distances = []
         angles = []
-        for angle, distance, quality in scan:
+        for angle, distance, quality, timestamp in scan:
             angles.append(np.round(np.radians(float(angle)),2))
             distances.append(float(distance))
         visualize(angles,distances,line,b)
@@ -67,3 +66,18 @@ def adjust_json():
     with open(settings.file_to_visualize + 'new_json.json', 'w') as outfile:
         json.dump(new_data, outfile)
 
+def clean_directory(directoryName):
+    folder = directoryName
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+if __name__ == "__main__":
+    clean_directory(settings.folder_to_save_plots)
+    run()
